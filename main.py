@@ -9,30 +9,34 @@ config.read("env.ini")
 
 api_key = config.get("variables", "api_key")
 
+city = ""
 
 def get_weather(city):
     res = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}")
     # res = request.
-    print(res.json())
 
-# window = Tk()
+    json_res = res.json()
 
-# window.title("Testing elements")
+    city = json_res["weather"][0]["description"]
 
-# frame = Frame(window, width=200, height=200)
+root = Tk()
 
-# greeting = Label(frame, text="Python rocks")
-# button = Button(frame, text="Submit", command=get_weather)
-# entry = Entry(frame, variable=city)
+root.title("Weather app")
 
-# button.pack()
+# frame = Frame(root, width=200, height=200)
+
+
+# 
+
+entry = Entry()
+button = Button(text="Submit", command=get_weather(entry.get()))
+
+greeting = Label(text=city)
+
+
+button.pack()
 # greeting.pack()
-# entry.pack()
+entry.pack()
 
-# window.mainloop()
+root.mainloop()
 
-# print("Done")
-
-get_weather("london")
-    
-# print(api_key)
