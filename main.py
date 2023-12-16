@@ -1,5 +1,4 @@
-from tkinter import *
-from tkinter.ttk import *
+import tkinter as tk
 import requests
 import configparser
 
@@ -9,34 +8,62 @@ config.read("env.ini")
 
 api_key = config.get("variables", "api_key")
 
-city = ""
-
 def get_weather(city):
-    res = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}")
-    # res = request.
+    try:
+        res = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}") 
+        if res.status_code == 200:
+            json_res = res.json()
+            desc = json_res["weather"][0]["description"] 
+            temp = json_res["main"]["temp"]
+            return [desc, temp]
+        else:
+             raise NameError("Couldn't fetch that data.")
+    except Exception as e:
+        return str(e)
 
-    json_res = res.json()
+def make_request():
+    # Get text from the entry widget
+    entry_text = entry.get()
+    
+    # Update the label with the entry's text
+    
+    
+    result = get_weather(entry_text)
+    
+    if isinstance(result, list):
+        desc = result[0]
+        temp = result[1]
+        
+        description.config(text=f"Desc: {desc}")
+        temperature.config(text=f"Temp: {temp}")
+        
+    else:
+        description.config(text=f"Error: {result}")
+        temperature.config(text="")
 
-    city = json_res["weather"][0]["description"]
+root = tk.Tk()
+root.title("Weather App")
 
-root = Tk()
+# Entry widget for user input
 
-root.title("Weather app")
+instruction = tk.Label(root, text="Type in a city to get started:")
+instruction.pack(pady=20)
 
-# frame = Frame(root, width=200, height=200)
+entry = tk.Entry(root)
+entry.pack(pady=10)
 
+# Button to trigger the action
+update_button = tk.Button(root, text="Check weather", command=make_request)
+update_button.pack()
 
-# 
+description = tk.Label(root, text="Desc: ")
+temperature = tk.Label(root, text="Temp: ")
 
-entry = Entry()
-button = Button(text="Submit", command=get_weather(entry.get()))
+temperature.pack(pady=10)
+description.pack(pady=10)
 
-greeting = Label(text=city)
+built_by = tk.Label(root, text="Built by Charlie ©2023 ")
+built_by.pack(pady=50)
 
-
-button.pack()
-# greeting.pack()
-entry.pack()
-
+# Start the Tkinter event loop
 root.mainloop()
-
