@@ -18,7 +18,7 @@ def get_weather(city):
     # it could go wrong
     
     try:
-        res = requests.get(f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}") 
+        res = requests.get("https://api.openweathermap.org/data/2.5/weather?q={}&appid={}".format(city, api_key)) 
 
         # response status might not be OK
         
@@ -53,13 +53,13 @@ def make_request():
         desc = result[0]
         temp = result[1]
         
-        description.config(text=f"Desc: {desc}")
-        temperature.config(text=f"Temp: {temp}")
+        description.config(text="Desc: {}".format(desc))
+        temperature.config(text="Temp: {}".format(temp))
         
     # Else an error has been thrown
     
     else:
-        description.config(text=f"Error: {result}")
+        description.config(text="Error: {}".format(result))
         temperature.config(text="")
 
 # Create a root window
